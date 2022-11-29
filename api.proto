@@ -1,0 +1,84 @@
+syntax = "proto3";
+package go2plugin;
+
+message GetRequSub {
+    repeated string SubVal = 1; // find kv
+    int32 Range = 2; // >0: Get v pieces of data from back to front, <0: Get v pieces of data from front to back
+    string Search = 3; // Find data with the same value as v
+    uint32 MaxNum = 4; // Find v pieces of data not greater than num
+    int64 MaxVal = 5; // Find v pieces of data not greater than num
+    uint32 MinNum = 6; // Find v pieces of data not less than num
+    int64 MinVal = 7; // Find v pieces of data not less than num
+    uint32 Random = 8; // Get v pieces of data
+    bool Unique = 9; // Get data with unique values
+    bool Group = 10; // Count the number of same value
+    bool Len = 11; // total number
+    bool Sum = 12; // sum all values
+    string LinkMaster = 13; // is Master
+    string LinkSlave = 14; // is Slave
+}
+message GetRequKey {
+    map<string, GetRequSub> KeySub = 1; // string is key
+}
+message GetAndLockRequ {
+    map<string, GetRequKey> IDKey = 1; // string is UID
+}
+
+///////////////////////////////////////////
+
+message GetRespSub {
+    map<string, string> SubVal = 1; //KV query returns
+    map<string, string> Range = 2; //Range query returns
+    map<string, string> Search = 3; //Search query returns
+    map<string, string> Max = 4; //Max query returns
+    map<string, string> Min = 5; //Min query returns
+    map<string, string> Random = 6; //Random query returns
+    map<string, string> Unique = 7; //Unique query returns
+    map<string, int32> Group = 8; //Count the number of same value
+    int32 Len = 9; //total number
+    int64 Sum = 10; //sum all values
+}
+message GetRespKey {
+    map<string, GetRespSub> KeySub = 1; // key sub
+}
+message GetAndLockResp {
+    map<string, GetRespKey> IDKey = 1; // ID key
+}
+
+
+
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+
+
+
+message PutRequSub {
+    map<string, string> SubVal = 1; // put kv
+    bool Clear = 2; // Clear all kv
+    bool List = 3; // List mode
+    int32 ListVal = 4; // <=0 First pop up the val pieces behind the old data, >0 Limit up to val pieces of data, Excess data will be shift out from the front
+    string LinkMaster = 5; // is Master
+    string LinkSlave = 6; // is Slave
+}
+message PutRequKey {
+    map<string, PutRequSub> KeySub = 1;
+}
+message PutAndUnlockRequ {
+    map<string, PutRequKey> IDKey = 1;
+}
+
+///////////////////////////////////////////
+
+message PutRespSub {
+    map<string, string> SubVal = 1; // Returns the modified data in List mode
+    uint64 Index = 2; // number of current edits
+}
+message PutRespKey {
+    map<string, PutRespSub> KeySub = 1; // key sub
+}
+message PutAndUnlockResp {
+    map<string, PutRespKey> IDKey = 1; // ID key
+}
