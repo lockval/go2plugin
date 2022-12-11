@@ -1,5 +1,6 @@
 package go2plugin
 
+// Input Input
 type Input struct {
 	UID      string         // Which user called (call,login,watch)
 	KSUID    string         // system call ID (system call)
@@ -29,7 +30,7 @@ type GetOpt struct {
 	id, key string
 }
 
-// Link Link
+// Link Associate related KeySub returns SubVal
 func (gsv *GetOpt) Link(slaveKeys ...string) *GetOpt {
 	LinkMaster := NewBase62UUID()
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].LinkMaster = LinkMaster
@@ -52,57 +53,58 @@ func (gsv *GetOpt) Link(slaveKeys ...string) *GetOpt {
 	return gsv
 }
 
-// Max Max
+// Max Find v pieces of data not greater than num
 func (gsv *GetOpt) Max(num uint32, v int64) *GetOpt {
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].MaxNum = num
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].MaxVal = v
 	return gsv
 }
 
-// Min Min
+// Min Find v pieces of data not less than num
 func (gsv *GetOpt) Min(num uint32, v int64) *GetOpt {
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].MinNum = num
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].MinVal = v
 	return gsv
 }
 
-// Range Range
+// Range >0: Get v pieces of data from back to front
+// Range <0: Get v pieces of data from front to back
 func (gsv *GetOpt) Range(v int32) *GetOpt {
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].Range = v
 	return gsv
 }
 
-// Search Search
+// Search Find data with the same value as v
 func (gsv *GetOpt) Search(v string) *GetOpt {
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].Search = v
 	return gsv
 }
 
-// Random Random
+// Random Get v pieces of data
 func (gsv *GetOpt) Random(v uint32) *GetOpt {
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].Random = v
 	return gsv
 }
 
-// Sum Sum
+// Sum sum all values
 func (gsv *GetOpt) Sum() *GetOpt {
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].Sum = true
 	return gsv
 }
 
-// Len Len
+// Len total number
 func (gsv *GetOpt) Len() *GetOpt {
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].Len = true
 	return gsv
 }
 
-// Unique Unique
+// Unique Get data with unique values
 func (gsv *GetOpt) Unique() *GetOpt {
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].Unique = true
 	return gsv
 }
 
-// Group Group
+// Group Count the number of same value
 func (gsv *GetOpt) Group() *GetOpt {
 	gsv.input.get.IDKey[gsv.id].KeySub[gsv.key].Group = true
 	return gsv
@@ -114,20 +116,24 @@ type PutOpt struct {
 	id, key string
 }
 
-// Clear Clear
+// Clear Clear all kv
 func (psv *PutOpt) Clear() *PutOpt {
 	psv.input.put.IDKey[psv.id].KeySub[psv.key].Clear = true
 	return psv
 }
 
-// List List
+// List mode
+//
+// <=0 First pop up the val pieces behind the old data
+//
+//	>0 Limit up to val pieces of data, Excess data will be shift out from the front
 func (psv *PutOpt) List(val int32) *PutOpt {
 	psv.input.put.IDKey[psv.id].KeySub[psv.key].ListVal = val
 	psv.input.put.IDKey[psv.id].KeySub[psv.key].List = true
 	return psv
 }
 
-// Link Link
+// Link Associate the related KeySub's put
 func (psv *PutOpt) Link(slaveKeys ...string) *PutOpt {
 	LinkMaster := NewBase62UUID()
 	psv.input.put.IDKey[psv.id].KeySub[psv.key].LinkMaster = LinkMaster
@@ -146,26 +152,32 @@ func (psv *PutOpt) Link(slaveKeys ...string) *PutOpt {
 	return psv
 }
 
+// InputGet InputGet
 func InputGet(input *Input) *GetAndLockRequ {
 	return input.get
 }
 
+// InputPut InputPut
 func InputPut(input *Input) *PutAndUnlockRequ {
 	return input.put
 }
 
+// SetInputGet SetInputGet
 func SetInputGet(input *Input, get *GetAndLockRequ) {
 	input.get = get
 }
 
+// SetInputPut SetInputPut
 func SetInputPut(input *Input, put *PutAndUnlockRequ) {
 	input.put = put
 }
 
+// NewGetOpt NewGetOpt
 func NewGetOpt(input *Input, id, key string) *GetOpt {
 	return &GetOpt{input: input, id: id, key: key}
 }
 
+// NewPutOpt NewPutOpt
 func NewPutOpt(input *Input, id, key string) *PutOpt {
 	return &PutOpt{input: input, id: id, key: key}
 }
