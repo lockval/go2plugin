@@ -8,6 +8,8 @@ type Input struct {
 	WATCHUID string         // Which ID to observe (watch)
 	Requ     map[string]any // User Request Parameters (call)
 
+	Json any // Json object
+
 	GetResp *GetAndLockResp // Data returned from GetAndLock
 
 	Throw            func(Code int, Error string)                    // Throw throw an error to the client
